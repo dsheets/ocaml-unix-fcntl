@@ -6,6 +6,10 @@ module Oflags = struct
   )
 end
 
+type host = {
+  oflags : Oflags.host;
+}
+
 open Ctypes
 open Foreign
 open Unsigned

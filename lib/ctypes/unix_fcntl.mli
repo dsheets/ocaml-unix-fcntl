@@ -3,3 +3,5 @@ module Oflags : sig
 
   val view : host:host -> t list Ctypes.typ
 end
+
+type host = { oflags : Oflags.host }
