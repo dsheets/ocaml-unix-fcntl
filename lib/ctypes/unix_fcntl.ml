@@ -27,6 +27,10 @@ type host = {
   oflags : Oflags.host;
 }
 
+let host = {
+  oflags = Oflags.host;
+}
+
 open Ctypes
 open Foreign
 open Unsigned

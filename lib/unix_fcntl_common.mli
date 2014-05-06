@@ -52,4 +52,3 @@ module Oflags : sig
   val is_set : host:host -> t -> int32 -> bool
   val set : host:host -> t -> int32 -> int32
 end
-

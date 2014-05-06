@@ -22,3 +22,4 @@ module Oflags : sig
 end
 
 type host = { oflags : Oflags.host }
+val host : host
