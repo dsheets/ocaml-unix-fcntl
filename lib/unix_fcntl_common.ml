@@ -157,12 +157,15 @@ module Oflags = struct
   let is_set ~host t =
     let exist, bit = match _to_code ~host t with
       | Some bit -> true, bit | None -> false, 0l
-    in fun code -> exist && (Int32.(logand bit code) = bit)
+    in fun code -> exist && match t with
+    | O_RDONLY -> code = bit
+    | _ -> (Int32.(logand bit code) = bit)
   let set ~host t =
     let bit = match _to_code ~host t with
       | Some bit -> bit | None -> raise Not_found
     in fun code -> Int32.(logor bit code)
 
+  (* This can't roundtrip [] because O_RDONLY is 0 *)
   let to_code ~host = List.fold_left (fun code t -> set ~host t code) 0l
 
   let host =
