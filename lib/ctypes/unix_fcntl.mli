@@ -23,3 +23,6 @@ end
 
 type host = { oflags : Oflags.host }
 val host : host
+
+val open_ :
+  string -> ?perms:Unix_sys_stat.File_perm.t -> Oflags.t list -> Unix.file_descr

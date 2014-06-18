@@ -15,10 +15,16 @@
  *
  */
 
+#define _BSD_SOURCE
+
+#include <stdint.h>
 #include <fcntl.h>
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
 #include <caml/alloc.h>
+#include <caml/threads.h>
+
+#define UNUSED(x) (void)(x)
 
 #ifndef O_ACCMODE
 #define O_ACCMODE (-1)
@@ -146,4 +152,30 @@ CAMLprim value unix_fcntl_o_noatime() {
 }
 CAMLprim value unix_fcntl_o_path() {
   return caml_copy_int32(O_PATH);
+}
+
+int unix_fcntl_open_perms(const char *path, int oflag, mode_t perms) {
+  int retval;
+  caml_release_runtime_system();
+  retval = open(path, oflag, perms);
+  caml_acquire_runtime_system();
+  return retval;
+}
+
+value unix_fcntl_open_perms_ptr(value _) {
+  UNUSED(_);
+  return caml_copy_int64((intptr_t)(void *)unix_fcntl_open_perms);
+}
+
+int unix_fcntl_open_none(const char *path, int oflag) {
+  int retval;
+  caml_release_runtime_system();
+  retval = open(path, oflag);
+  caml_acquire_runtime_system();
+  return retval;
+}
+
+value unix_fcntl_open_none_ptr(value _) {
+  UNUSED(_);
+  return caml_copy_int64((intptr_t)(void *)unix_fcntl_open_none);
 }

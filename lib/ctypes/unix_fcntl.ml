@@ -34,3 +34,27 @@ let host = {
 open Ctypes
 open Foreign
 open Unsigned
+
+let local ?check_errno addr typ =
+  coerce (ptr void) (funptr ?check_errno typ) (ptr_of_raw_address addr)
+
+let fd = Fd_send_recv.(view ~read:fd_of_int ~write:int_of_fd int)
+
+external unix_fcntl_open_perms_ptr : unit -> int64 = "unix_fcntl_open_perms_ptr"
+external unix_fcntl_open_none_ptr : unit -> int64 = "unix_fcntl_open_none_ptr"
+
+let open_ =
+  let perms = Unix_sys_stat.File_perm.(view ~host) in
+  let oflags = Oflags.view ~host:host.oflags in
+  let c_perms = local ~check_errno:true (unix_fcntl_open_perms_ptr ())
+    PosixTypes.(string @-> oflags @-> perms @-> returning fd)
+  in
+  let c_none = local ~check_errno:true (unix_fcntl_open_none_ptr ())
+    PosixTypes.(string @-> oflags @-> returning fd)
+  in
+  fun path ?perms oflags ->
+    try begin match perms with
+    | None      -> c_none path oflags
+    | Some perms -> c_perms path oflags perms
+    end
+    with Unix.Unix_error(e,_,_) -> raise (Unix.Unix_error (e,"open",""))
