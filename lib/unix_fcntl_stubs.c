@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 David Sheets <sheets@alum.mit.edu>
+ * Copyright (c) 2014-2015 David Sheets <sheets@alum.mit.edu>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
  */
 
 #define _BSD_SOURCE
+#define _POSIX_C_SOURCE 200809L
 
 #include <stdint.h>
 #include <fcntl.h>
