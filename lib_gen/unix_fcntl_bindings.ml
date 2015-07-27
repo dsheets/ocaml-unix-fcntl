@@ -24,6 +24,13 @@ let fd = view ~read:fd_of_int ~write:int_of_fd int
 
 module C(F: Cstubs.FOREIGN) = struct
 
+  (* OS X doesn't have these *)
+  let o_rsync    = F.foreign "unix_fcntl_o_rsync"    (void @-> returning int)
+  let o_direct   = F.foreign "unix_fcntl_o_direct"   (void @-> returning int)
+  let o_noatime  = F.foreign "unix_fcntl_o_noatime"  (void @-> returning int)
+  let o_path     = F.foreign "unix_fcntl_o_path"     (void @-> returning int)
+  let o_tmpfile  = F.foreign "unix_fcntl_o_tmpfile"  (void @-> returning int)
+
   (* Linux doesn't have these *)
   let o_symlink  = F.foreign "unix_fcntl_o_symlink"  (void @-> returning int)
   let o_evtonly  = F.foreign "unix_fcntl_o_evtonly"  (void @-> returning int)

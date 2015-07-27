@@ -9,6 +9,55 @@
 #define LINUX defined(__linux__)
 #define APPLE defined(__APPLE__)
 
+// NOT OS X
+
+int unix_fcntl_o_rsync() {
+#define O_RSYNC_UNAVAILABLE (APPLE)
+#if !FORCE_CHECK && O_RSYNC_UNAVAILABLE && !defined(O_RSYNC)
+  return -1;
+#else
+  return O_RSYNC;
+#endif
+}
+
+int unix_fcntl_o_direct() {
+#define O_DIRECT_UNAVAILABLE (APPLE)
+#if !FORCE_CHECK && O_DIRECT_UNAVAILABLE && !defined(O_DIRECT)
+  return -1;
+#else
+  return O_DIRECT;
+#endif
+}
+
+int unix_fcntl_o_noatime() {
+#define O_NOATIME_UNAVAILABLE (APPLE)
+#if !FORCE_CHECK && O_NOATIME_UNAVAILABLE && !defined(O_NOATIME)
+  return -1;
+#else
+  return O_NOATIME;
+#endif
+}
+
+int unix_fcntl_o_path() {
+#define O_PATH_UNAVAILABLE (APPLE)
+#if !FORCE_CHECK && O_PATH_UNAVAILABLE && !defined(O_PATH)
+  return -1;
+#else
+  return O_PATH;
+#endif
+}
+
+int unix_fcntl_o_tmpfile() {
+#define O_TMPFILE_UNAVAILABLE (APPLE)
+#if !FORCE_CHECK && O_TMPFILE_UNAVAILABLE && !defined(O_TMPFILE)
+  return -1;
+#else
+  return O_TMPFILE;
+#endif
+}
+
+// NOT Linux
+
 int unix_fcntl_o_shlock() {
 #define O_SHLOCK_UNAVAILABLE (LINUX)
 #if !FORCE_CHECK && O_SHLOCK_UNAVAILABLE && !defined(O_SHLOCK)
@@ -44,6 +93,8 @@ int unix_fcntl_o_symlink() {
   return O_SYMLINK;
 #endif
 }
+
+// NOT Linux or OS X
 
 int unix_fcntl_o_search() {
 #define O_SEARCH_UNAVAILABLE (LINUX || APPLE)
