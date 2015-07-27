@@ -1,2 +1,6 @@
+0.2.0 (2015-07-27):
+* Use ctypes >= 0.4.0 with stub generation
+* Separate modules into Unix-dependent and Unix-independent sets
+
 0.1.0 (2015-07-27):
 * Initial public release

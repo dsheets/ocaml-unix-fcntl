@@ -1,0 +1,8 @@
+version = "0.2.0"
+description = "Host-dependent Unix fcntl.h access"
+requires = "ctypes.stubs unix unix-errno"
+archive(byte) = "unix_fcntl.cma"
+archive(bytes, plugin) = "unix_fcntl.cma"
+archive(native) = "unix_fcntl.cmxa"
+archive(native, plugin) = "unix_fcntl.cmxs"
+exists_if = "unix_fcntl.cma"
