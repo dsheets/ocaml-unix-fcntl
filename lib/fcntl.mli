@@ -24,22 +24,27 @@ module Oflags : sig
   | O_NOCTTY
   | O_NOFOLLOW
   | O_TRUNC
-  | O_TTY_INIT (* Can be 0 by POSIX *)
+  | O_TTY_INIT (* POSIX: can be 0; UNAVAILABLE in OS X and Linux *)
   | O_APPEND
   | O_DSYNC
   | O_NONBLOCK
-  | O_RSYNC
+  | O_RSYNC (* NOT OS X *)
   | O_SYNC
-  | O_EXEC
+  | O_EXEC (* UNAVAILABLE in OS X and Linux *)
   | O_RDONLY (* Can be 0 in practice *)
   | O_RDWR
-  | O_SEARCH
+  | O_SEARCH (* UNAVAILABLE in OS X and Linux *)
   | O_WRONLY
-  | O_ASYNC (* Linux *)
-  | O_DIRECT (* Linux *)
-  | O_NOATIME (* Linux *)
-  | O_PATH (* Linux *)
-  | O_TMPFILE (* Linux *)
+  (* Non-POSIX below *)
+  | O_ASYNC
+  | O_DIRECT (* ONLY Linux *)
+  | O_NOATIME (* ONLY Linux *)
+  | O_PATH (* ONLY Linux *)
+  | O_TMPFILE (* ONLY Linux *)
+  | O_SHLOCK (* NOT Linux *)
+  | O_EXLOCK (* NOT Linux *)
+  | O_EVTONLY (* ONLY OS X *)
+  | O_SYMLINK (* ONLY OS X *)
 
   type defns = {
     o_accmode   : int option;
@@ -66,6 +71,10 @@ module Oflags : sig
     o_exec      : int option;
     o_search    : int option;
     o_tmpfile   : int option;
+    o_shlock    : int option;
+    o_exlock    : int option;
+    o_evtonly   : int option;
+    o_symlink   : int option;
   }
 
   type host

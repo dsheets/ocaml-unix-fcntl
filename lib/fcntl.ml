@@ -40,6 +40,10 @@ module Oflags = struct
   | O_NOATIME (* Linux *)
   | O_PATH (* Linux *)
   | O_TMPFILE (* Linux *)
+  | O_SHLOCK
+  | O_EXLOCK
+  | O_EVTONLY
+  | O_SYMLINK
 
   type defns = {
     o_accmode   : int option;
@@ -66,6 +70,10 @@ module Oflags = struct
     o_exec      : int option;
     o_search    : int option;
     o_tmpfile   : int option;
+    o_shlock    : int option;
+    o_exlock    : int option;
+    o_evtonly   : int option;
+    o_symlink   : int option;
   }
 
   type host = defns
@@ -97,6 +105,10 @@ module Oflags = struct
     | O_EXEC      -> defns.o_exec
     | O_SEARCH    -> defns.o_search
     | O_TMPFILE   -> defns.o_tmpfile
+    | O_SHLOCK    -> defns.o_shlock
+    | O_EXLOCK    -> defns.o_exlock
+    | O_EVTONLY   -> defns.o_evtonly
+    | O_SYMLINK   -> defns.o_symlink
 
   let is_set ~host t =
     let exist, bit = match _to_code ~host t with

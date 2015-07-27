@@ -22,6 +22,7 @@ let () =
   let fmt = Format.formatter_of_out_channel type_oc in
   Format.fprintf fmt "#define _GNU_SOURCE@.";
   Format.fprintf fmt "#define _POSIX_C_SOURCE 200809L@.";
+  Format.fprintf fmt "#define _DARWIN_C_SOURCE@.";
   Format.fprintf fmt "#include <fcntl.h>@.";
   Cstubs.Types.write_c fmt (module Unix_fcntl_types.C);
   close_out type_oc;

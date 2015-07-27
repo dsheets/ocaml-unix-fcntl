@@ -25,6 +25,12 @@ let fd = view ~read:fd_of_int ~write:int_of_fd int
 module C(F: Cstubs.FOREIGN) = struct
 
   (* Linux doesn't have these *)
+  let o_symlink  = F.foreign "unix_fcntl_o_symlink"  (void @-> returning int)
+  let o_evtonly  = F.foreign "unix_fcntl_o_evtonly"  (void @-> returning int)
+  let o_exlock   = F.foreign "unix_fcntl_o_exlock"   (void @-> returning int)
+  let o_shlock   = F.foreign "unix_fcntl_o_shlock"   (void @-> returning int)
+
+  (* Linux and OS X don't have these *)
   let o_search   = F.foreign "unix_fcntl_o_search"   (void @-> returning int)
   let o_exec     = F.foreign "unix_fcntl_o_exec"     (void @-> returning int)
   let o_tty_init = F.foreign "unix_fcntl_o_tty_init" (void @-> returning int)

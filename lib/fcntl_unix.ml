@@ -44,6 +44,10 @@ module Oflags = struct
     | O_EXEC
     | O_SEARCH
     | O_TMPFILE
+    | O_SHLOCK
+    | O_EXLOCK
+    | O_EVTONLY
+    | O_SYMLINK
     | O_ASYNC     -> raise Not_found
   )
 
@@ -96,6 +100,10 @@ module Oflags = struct
       o_noatime   = Some o_noatime;
       o_path      = Some o_path;
       o_tmpfile   = Some o_tmpfile;
+      o_shlock    = option C.o_shlock;
+      o_exlock    = option C.o_exlock;
+      o_evtonly   = option C.o_evtonly;
+      o_symlink   = option C.o_symlink;
       o_exec      = option C.o_exec;
       o_search    = option C.o_search;
       o_tty_init  = option C.o_tty_init;
