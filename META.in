@@ -1,4 +1,4 @@
-version = "0.1"
+version = "0.1.0"
 description = "Host-dependent UNIX fcntl.h access"
 archive(byte) = "unix_fcntl.cma"
 archive(native) = "unix_fcntl.cmxa"
