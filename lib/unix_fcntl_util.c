@@ -2,8 +2,12 @@
 
 #define FORCE_CHECK 0
 
+#define LINUX defined(__linux__)
+#define APPLE defined(__APPLE__)
+
 int unix_fcntl_o_search() {
-#if !FORCE_CHECK && defined(__linux__) && !defined(O_SEARCH)
+#define O_SEARCH_UNAVAILABLE (LINUX || APPLE)
+#if !FORCE_CHECK && O_SEARCH_UNAVAILABLE && !defined(O_SEARCH)
   return -1;
 #else
   return O_SEARCH;
@@ -11,7 +15,8 @@ int unix_fcntl_o_search() {
 }
 
 int unix_fcntl_o_exec() {
-#if !FORCE_CHECK &&  defined(__linux__) && !defined(O_EXEC)
+#define O_EXEC_UNAVAILABLE (LINUX || APPLE)
+#if !FORCE_CHECK && O_EXEC_UNAVAILABLE && !defined(O_EXEC)
   return -1;
 #else
   return O_EXEC;
@@ -19,7 +24,8 @@ int unix_fcntl_o_exec() {
 }
 
 int unix_fcntl_o_tty_init() {
-#if !FORCE_CHECK && defined(__linux__) && !defined(O_TTY_INIT)
+#define O_TTY_INIT_UNAVAILABLE (LINUX || APPLE)
+#if !FORCE_CHECK && O_TTY_INIT_UNAVAILABLE && !defined(O_TTY_INIT)
   return -1;
 #else
   return O_TTY_INIT;
