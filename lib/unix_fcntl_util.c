@@ -1,5 +1,9 @@
+#include <fcntl.h>
+
+#define FORCE_CHECK 0
+
 int unix_fcntl_o_search() {
-#if defined(__linux__) && !defined(O_SEARCH)
+#if !FORCE_CHECK && defined(__linux__) && !defined(O_SEARCH)
   return -1;
 #else
   return O_SEARCH;
@@ -7,7 +11,7 @@ int unix_fcntl_o_search() {
 }
 
 int unix_fcntl_o_exec() {
-#if defined(__linux__) && !defined(O_EXEC)
+#if !FORCE_CHECK &&  defined(__linux__) && !defined(O_EXEC)
   return -1;
 #else
   return O_EXEC;
@@ -15,7 +19,7 @@ int unix_fcntl_o_exec() {
 }
 
 int unix_fcntl_o_tty_init() {
-#if defined(__linux__) && !defined(O_TTY_INIT)
+#if !FORCE_CHECK && defined(__linux__) && !defined(O_TTY_INIT)
   return -1;
 #else
   return O_TTY_INIT;
