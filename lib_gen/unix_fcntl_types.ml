@@ -29,7 +29,6 @@ module C(F: Cstubs.Types.TYPE) = struct
   let o_nonblock = F.(constant "O_NONBLOCK" int)
   let o_sync = F.(constant "O_SYNC" int)
   let o_async = F.(constant "O_ASYNC" int)
-  let o_dsync = F.(constant "O_DSYNC" int)
   let o_directory = F.(constant "O_DIRECTORY" int)
   let o_nofollow = F.(constant "O_NOFOLLOW" int)
   let o_cloexec = F.(constant "O_CLOEXEC" int)

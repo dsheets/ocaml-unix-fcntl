@@ -61,6 +61,17 @@ int unix_fcntl_o_tmpfile() {
 #endif
 }
 
+// NOT FreeBSD
+
+int unix_fcntl_o_dsync() {
+#define O_DSYNC_UNAVAILABLE (FREEBSD)
+#if !FORCE_CHECK && O_DSYNC_UNAVAILABLE && !defined(O_DSYNC)
+  return -1;
+#else
+  return O_DSYNC;
+#endif
+}
+
 // NOT Linux
 
 int unix_fcntl_o_shlock() {
