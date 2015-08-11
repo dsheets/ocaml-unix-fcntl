@@ -10,17 +10,9 @@
 
 #define LINUX defined(__linux__)
 #define APPLE defined(__APPLE__)
+#define FREEBSD defined(__FreeBSD__)
 
 // NOT OS X
-
-int unix_fcntl_o_rsync() {
-#define O_RSYNC_UNAVAILABLE (APPLE)
-#if !FORCE_CHECK && O_RSYNC_UNAVAILABLE && !defined(O_RSYNC)
-  return -1;
-#else
-  return O_RSYNC;
-#endif
-}
 
 int unix_fcntl_o_direct() {
 #define O_DIRECT_UNAVAILABLE (APPLE)
@@ -31,8 +23,19 @@ int unix_fcntl_o_direct() {
 #endif
 }
 
+// NOT OS X or FreeBSD
+
+int unix_fcntl_o_rsync() {
+#define O_RSYNC_UNAVAILABLE (APPLE || FREEBSD)
+#if !FORCE_CHECK && O_RSYNC_UNAVAILABLE && !defined(O_RSYNC)
+  return -1;
+#else
+  return O_RSYNC;
+#endif
+}
+
 int unix_fcntl_o_noatime() {
-#define O_NOATIME_UNAVAILABLE (APPLE)
+#define O_NOATIME_UNAVAILABLE (APPLE || FREEBSD)
 #if !FORCE_CHECK && O_NOATIME_UNAVAILABLE && !defined(O_NOATIME)
   return -1;
 #else
@@ -41,7 +44,7 @@ int unix_fcntl_o_noatime() {
 }
 
 int unix_fcntl_o_path() {
-#define O_PATH_UNAVAILABLE (APPLE)
+#define O_PATH_UNAVAILABLE (APPLE || FREEBSD)
 #if !FORCE_CHECK && O_PATH_UNAVAILABLE && !defined(O_PATH)
   return -1;
 #else
@@ -50,7 +53,7 @@ int unix_fcntl_o_path() {
 }
 
 int unix_fcntl_o_tmpfile() {
-#define O_TMPFILE_UNAVAILABLE (APPLE)
+#define O_TMPFILE_UNAVAILABLE (APPLE || FREEBSD)
 #if !FORCE_CHECK && O_TMPFILE_UNAVAILABLE && !defined(O_TMPFILE)
   return -1;
 #else
@@ -78,6 +81,8 @@ int unix_fcntl_o_exlock() {
 #endif
 }
 
+// ONLY OS X
+
 int unix_fcntl_o_evtonly() {
 #define O_EVTONLY_AVAILABLE (APPLE)
 #if !FORCE_CHECK && !O_EVTONLY_AVAILABLE && !defined(O_EVTONLY)
@@ -98,15 +103,6 @@ int unix_fcntl_o_symlink() {
 
 // NOT Linux or OS X
 
-int unix_fcntl_o_search() {
-#define O_SEARCH_UNAVAILABLE (LINUX || APPLE)
-#if !FORCE_CHECK && O_SEARCH_UNAVAILABLE && !defined(O_SEARCH)
-  return -1;
-#else
-  return O_SEARCH;
-#endif
-}
-
 int unix_fcntl_o_exec() {
 #define O_EXEC_UNAVAILABLE (LINUX || APPLE)
 #if !FORCE_CHECK && O_EXEC_UNAVAILABLE && !defined(O_EXEC)
@@ -122,5 +118,16 @@ int unix_fcntl_o_tty_init() {
   return -1;
 #else
   return O_TTY_INIT;
+#endif
+}
+
+// NOT Linux or OS X or FreeBSD
+
+int unix_fcntl_o_search() {
+#define O_SEARCH_UNAVAILABLE (LINUX || APPLE || FREEBSD)
+#if !FORCE_CHECK && O_SEARCH_UNAVAILABLE && !defined(O_SEARCH)
+  return -1;
+#else
+  return O_SEARCH;
 #endif
 }
