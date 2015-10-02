@@ -52,15 +52,6 @@ int unix_fcntl_o_path() {
 #endif
 }
 
-int unix_fcntl_o_tmpfile() {
-#define O_TMPFILE_UNAVAILABLE (APPLE || FREEBSD)
-#if !FORCE_CHECK && O_TMPFILE_UNAVAILABLE && !defined(O_TMPFILE)
-  return -1;
-#else
-  return O_TMPFILE;
-#endif
-}
-
 // NOT FreeBSD
 
 int unix_fcntl_o_dsync() {
@@ -140,5 +131,15 @@ int unix_fcntl_o_search() {
   return -1;
 #else
   return O_SEARCH;
+#endif
+}
+
+// ONLY Linux 3.11+
+
+int unix_fcntl_o_tmpfile() {
+#if !defined(O_TMPFILE)
+  return -1;
+#else
+  return O_TMPFILE;
 #endif
 }
