@@ -46,8 +46,10 @@ module Oflags : sig
   | O_EVTONLY (* ONLY OS X *)
   | O_SYMLINK (* ONLY OS X *)
 
+  type oflag = t
+
   type defns = {
-    o_accmode   : int option;
+    o_accmode   : int;
     o_rdonly    : int option;
     o_wronly    : int option;
     o_rdwr      : int option;
@@ -77,18 +79,40 @@ module Oflags : sig
     o_symlink   : int option;
   }
 
-  type host
+  module Host : sig
+    type t
 
-  val host_of_defns : defns -> host
-  val defns_of_host : host -> defns
+    val of_defns : defns -> t
+    val to_defns : t -> defns
 
-  val to_code : host:host -> t list -> int
-  val of_code : host:host -> int -> t list
+    val to_string : t -> string
+    val of_string : string -> t
 
-  val is_set : host:host -> t -> int -> bool
-  val set : host:host -> t -> int -> int
+    val iter : t
+      -> (int -> unit) -> (int -> oflag -> unit) -> (oflag -> unit) -> unit
+  end
+
+  val to_code : host:Host.t -> t list -> int
+  val of_code : host:Host.t -> int -> t list
+
+  val is_set : host:Host.t -> t -> int -> bool
+  val set : host:Host.t -> t -> int -> int
+
+  val to_string : t -> string
+
+  val of_string : string -> t option
 end
 
-type host = {
-  oflags : Oflags.host;
-}
+module Host : sig
+  type t = {
+    oflags : Oflags.Host.t;
+  }
+
+  val to_string : t -> string
+
+  val of_string : string -> t
+
+  val iter : t
+    -> oflags:((int -> unit) * (int -> Oflags.t -> unit) * (Oflags.t -> unit))
+    -> unit
+end

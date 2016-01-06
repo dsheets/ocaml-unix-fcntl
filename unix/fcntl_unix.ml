@@ -79,7 +79,7 @@ module Oflags = struct
   let host =
     let option f = match f () with -1 -> None | x -> Some x in
     let defns = Oflags.(Type.({
-      o_accmode   = Some o_accmode;
+      o_accmode   = o_accmode;
       o_rdonly    = Some o_rdonly;
       o_wronly    = Some o_wronly;
       o_rdwr      = Some o_rdwr;
@@ -108,7 +108,7 @@ module Oflags = struct
       o_search    = option C.o_search;
       o_tty_init  = option C.o_tty_init;
     })) in
-    Oflags.host_of_defns defns
+    Oflags.Host.of_defns defns
 
   let view ~host = Oflags.(
     Ctypes.(view ~read:(of_code ~host) ~write:(to_code ~host) int)
@@ -116,11 +116,11 @@ module Oflags = struct
 end
 
 let host = {
-  Fcntl.oflags = Oflags.host;
+  Fcntl.Host.oflags = Oflags.host;
 }
 
 let open_ path ?perms oflags =
-  let oflags = Fcntl.(Oflags.to_code ~host:host.oflags oflags) in
+  let oflags = Fcntl.(Oflags.to_code ~host:host.Host.oflags oflags) in
   Errno_unix.raise_on_errno ~call:"open" ~label:path (fun () ->
     match perms with
     | None       -> C.open_ (Some path) oflags

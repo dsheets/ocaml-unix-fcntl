@@ -1,5 +1,5 @@
 (*
- * Copyright (c) 2014-2015 David Sheets <sheets@alum.mit.edu>
+ * Copyright (c) 2014-2016 David Sheets <sheets@alum.mit.edu>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,36 +17,38 @@
 
 module Oflags = struct
   type t =
-  | O_CLOEXEC
-  | O_CREAT
-  | O_DIRECTORY
-  | O_EXCL
-  | O_NOCTTY
-  | O_NOFOLLOW
-  | O_TRUNC
-  | O_TTY_INIT (* Can be 0 by POSIX *)
-  | O_APPEND
-  | O_DSYNC
-  | O_NONBLOCK
-  | O_RSYNC
-  | O_SYNC
-  | O_EXEC
-  | O_RDONLY (* Can be 0 in practice *)
-  | O_RDWR
-  | O_SEARCH
-  | O_WRONLY
-  | O_ASYNC (* Linux *)
-  | O_DIRECT (* Linux *)
-  | O_NOATIME (* Linux *)
-  | O_PATH (* Linux *)
-  | O_TMPFILE (* Linux *)
-  | O_SHLOCK
-  | O_EXLOCK
-  | O_EVTONLY
-  | O_SYMLINK
+    | O_CLOEXEC
+    | O_CREAT
+    | O_DIRECTORY
+    | O_EXCL
+    | O_NOCTTY
+    | O_NOFOLLOW
+    | O_TRUNC
+    | O_TTY_INIT (* Can be 0 by POSIX *)
+    | O_APPEND
+    | O_DSYNC
+    | O_NONBLOCK
+    | O_RSYNC
+    | O_SYNC
+    | O_EXEC
+    | O_RDONLY (* Can be 0 in practice *)
+    | O_RDWR
+    | O_SEARCH
+    | O_WRONLY
+    | O_ASYNC (* Linux *)
+    | O_DIRECT (* Linux *)
+    | O_NOATIME (* Linux *)
+    | O_PATH (* Linux *)
+    | O_TMPFILE (* Linux *)
+    | O_SHLOCK
+    | O_EXLOCK
+    | O_EVTONLY
+    | O_SYMLINK
+
+  type oflag = t
 
   type defns = {
-    o_accmode   : int option;
+    o_accmode   : int;
     o_rdonly    : int option;
     o_wronly    : int option;
     o_rdwr      : int option;
@@ -76,10 +78,152 @@ module Oflags = struct
     o_symlink   : int option;
   }
 
-  type host = defns
+  let empty_defns o_accmode = {
+    o_accmode;
+    o_rdonly    = None;
+    o_wronly    = None;
+    o_rdwr      = None;
+    o_creat     = None;
+    o_excl      = None;
+    o_noctty    = None;
+    o_trunc     = None;
+    o_append    = None;
+    o_nonblock  = None;
+    o_sync      = None;
+    o_async     = None;
+    o_dsync     = None;
+    o_rsync     = None;
+    o_directory = None;
+    o_nofollow  = None;
+    o_cloexec   = None;
+    o_direct    = None;
+    o_noatime   = None;
+    o_path      = None;
+    o_tty_init  = None;
+    o_exec      = None;
+    o_search    = None;
+    o_tmpfile   = None;
+    o_shlock    = None;
+    o_exlock    = None;
+    o_evtonly   = None;
+    o_symlink   = None;
+  }
 
-  let host_of_defns defns = defns
-  let defns_of_host host = host
+  let iter_defns defns f_accmode f_exist f_missing =
+    f_accmode defns.o_accmode;
+    (match defns.o_rdonly with
+     | Some x -> f_exist x O_RDONLY | None -> f_missing O_RDONLY);
+    (match defns.o_wronly with
+     | Some x -> f_exist x O_WRONLY | None -> f_missing O_WRONLY);
+    (match defns.o_rdwr with
+     | Some x -> f_exist x O_RDWR | None -> f_missing O_RDWR);
+    (match defns.o_creat with
+     | Some x -> f_exist x O_CREAT | None -> f_missing O_CREAT);
+    (match defns.o_excl with
+     | Some x -> f_exist x O_EXCL | None -> f_missing O_EXCL);
+    (match defns.o_noctty with
+     | Some x -> f_exist x O_NOCTTY | None -> f_missing O_NOCTTY);
+    (match defns.o_trunc with
+     | Some x -> f_exist x O_TRUNC | None -> f_missing O_TRUNC);
+    (match defns.o_append with
+     | Some x -> f_exist x O_APPEND | None -> f_missing O_APPEND);
+    (match defns.o_nonblock with
+     | Some x -> f_exist x O_NONBLOCK | None -> f_missing O_NONBLOCK);
+    (match defns.o_sync with
+     | Some x -> f_exist x O_SYNC | None -> f_missing O_SYNC);
+    (match defns.o_async with
+     | Some x -> f_exist x O_ASYNC | None -> f_missing O_ASYNC);
+    (match defns.o_dsync with
+     | Some x -> f_exist x O_DSYNC | None -> f_missing O_DSYNC);
+    (match defns.o_rsync with
+     | Some x -> f_exist x O_RSYNC | None -> f_missing O_RSYNC);
+    (match defns.o_directory with
+     | Some x -> f_exist x O_DIRECTORY | None -> f_missing O_DIRECTORY);
+    (match defns.o_nofollow with
+     | Some x -> f_exist x O_NOFOLLOW | None -> f_missing O_NOFOLLOW);
+    (match defns.o_cloexec with
+     | Some x -> f_exist x O_CLOEXEC | None -> f_missing O_CLOEXEC);
+    (match defns.o_direct with
+     | Some x -> f_exist x O_DIRECT | None -> f_missing O_DIRECT);
+    (match defns.o_noatime with
+     | Some x -> f_exist x O_NOATIME | None -> f_missing O_NOATIME);
+    (match defns.o_path with
+     | Some x -> f_exist x O_PATH | None -> f_missing O_PATH);
+    (match defns.o_tty_init with
+     | Some x -> f_exist x O_TTY_INIT | None -> f_missing O_TTY_INIT);
+    (match defns.o_exec with
+     | Some x -> f_exist x O_EXEC | None -> f_missing O_EXEC);
+    (match defns.o_search with
+     | Some x -> f_exist x O_SEARCH | None -> f_missing O_SEARCH);
+    (match defns.o_tmpfile with
+     | Some x -> f_exist x O_TMPFILE | None -> f_missing O_TMPFILE);
+    (match defns.o_shlock with
+     | Some x -> f_exist x O_SHLOCK | None -> f_missing O_SHLOCK);
+    (match defns.o_exlock with
+     | Some x -> f_exist x O_EXLOCK | None -> f_missing O_EXLOCK);
+    (match defns.o_evtonly with
+     | Some x -> f_exist x O_EVTONLY | None -> f_missing O_EVTONLY);
+    (match defns.o_symlink with
+     | Some x -> f_exist x O_SYMLINK | None -> f_missing O_SYMLINK)
+
+  let to_string = function
+    | O_CLOEXEC -> "O_CLOEXEC"
+    | O_CREAT -> "O_CREAT"
+    | O_DIRECTORY -> "O_DIRECTORY"
+    | O_EXCL -> "O_EXCL"
+    | O_NOCTTY -> "O_NOCTTY"
+    | O_NOFOLLOW -> "O_NOFOLLOW"
+    | O_TRUNC -> "O_TRUNC"
+    | O_TTY_INIT -> "O_TTY_INIT"
+    | O_APPEND -> "O_APPEND"
+    | O_DSYNC -> "O_DSYNC"
+    | O_NONBLOCK -> "O_NONBLOCK"
+    | O_RSYNC -> "O_RSYNC"
+    | O_SYNC -> "O_SYNC"
+    | O_EXEC -> "O_EXEC"
+    | O_RDONLY -> "O_RDONLY"
+    | O_RDWR -> "O_RDWR"
+    | O_SEARCH -> "O_SEARCH"
+    | O_WRONLY -> "O_WRONLY"
+    | O_ASYNC -> "O_ASYNC"
+    | O_DIRECT -> "O_DIRECT"
+    | O_NOATIME -> "O_NOATIME"
+    | O_PATH -> "O_PATH"
+    | O_TMPFILE -> "O_TMPFILE"
+    | O_SHLOCK -> "O_SHLOCK"
+    | O_EXLOCK -> "O_EXLOCK"
+    | O_EVTONLY -> "O_EVTONLY"
+    | O_SYMLINK -> "O_SYMLINK"
+
+  let of_string = function
+    | "O_CLOEXEC" -> Some O_CLOEXEC
+    | "O_CREAT" -> Some O_CREAT
+    | "O_DIRECTORY" -> Some O_DIRECTORY
+    | "O_EXCL" -> Some O_EXCL
+    | "O_NOCTTY" -> Some O_NOCTTY
+    | "O_NOFOLLOW" -> Some O_NOFOLLOW
+    | "O_TRUNC" -> Some O_TRUNC
+    | "O_TTY_INIT" -> Some O_TTY_INIT
+    | "O_APPEND" -> Some O_APPEND
+    | "O_DSYNC" -> Some O_DSYNC
+    | "O_NONBLOCK" -> Some O_NONBLOCK
+    | "O_RSYNC" -> Some O_RSYNC
+    | "O_SYNC" -> Some O_SYNC
+    | "O_EXEC" -> Some O_EXEC
+    | "O_RDONLY" -> Some O_RDONLY
+    | "O_RDWR" -> Some O_RDWR
+    | "O_SEARCH" -> Some O_SEARCH
+    | "O_WRONLY" -> Some O_WRONLY
+    | "O_ASYNC" -> Some O_ASYNC
+    | "O_DIRECT" -> Some O_DIRECT
+    | "O_NOATIME" -> Some O_NOATIME
+    | "O_PATH" -> Some O_PATH
+    | "O_TMPFILE" -> Some O_TMPFILE
+    | "O_SHLOCK" -> Some O_SHLOCK
+    | "O_EXLOCK" -> Some O_EXLOCK
+    | "O_EVTONLY" -> Some O_EVTONLY
+    | "O_SYMLINK" -> Some O_SYMLINK
+    | _ -> None
 
   let _to_code ~host = let defns = host in function
     | O_RDONLY    -> defns.o_rdonly
@@ -124,6 +268,35 @@ module Oflags = struct
   (* This can't roundtrip [] because O_RDONLY is 0 *)
   let to_code ~host = List.fold_left (fun code t -> set ~host t code) 0
 
+  let with_code defns symbol code = match symbol with
+    | O_RDONLY    -> { defns with o_rdonly = code }
+    | O_WRONLY    -> { defns with o_wronly = code }
+    | O_RDWR      -> { defns with o_rdwr = code }
+    | O_CREAT     -> { defns with o_creat = code }
+    | O_EXCL      -> { defns with o_excl = code }
+    | O_NOCTTY    -> { defns with o_noctty = code }
+    | O_TRUNC     -> { defns with o_trunc = code }
+    | O_APPEND    -> { defns with o_append = code }
+    | O_NONBLOCK  -> { defns with o_nonblock = code }
+    | O_SYNC      -> { defns with o_sync = code }
+    | O_ASYNC     -> { defns with o_async = code }
+    | O_DSYNC     -> { defns with o_dsync = code }
+    | O_RSYNC     -> { defns with o_rsync = code }
+    | O_DIRECTORY -> { defns with o_directory = code }
+    | O_NOFOLLOW  -> { defns with o_nofollow = code }
+    | O_CLOEXEC   -> { defns with o_cloexec = code }
+    | O_DIRECT    -> { defns with o_direct = code }
+    | O_NOATIME   -> { defns with o_noatime = code }
+    | O_PATH      -> { defns with o_path = code }
+    | O_TTY_INIT  -> { defns with o_tty_init = code }
+    | O_EXEC      -> { defns with o_exec = code }
+    | O_SEARCH    -> { defns with o_search = code }
+    | O_TMPFILE   -> { defns with o_tmpfile = code }
+    | O_SHLOCK    -> { defns with o_shlock = code }
+    | O_EXLOCK    -> { defns with o_exlock = code }
+    | O_EVTONLY   -> { defns with o_evtonly = code }
+    | O_SYMLINK   -> { defns with o_symlink = code }
+
   let of_code ~host code = List.filter
       (fun t -> is_set ~host t code)
       [
@@ -150,10 +323,67 @@ module Oflags = struct
         O_NOATIME;
         O_PATH;
         O_TMPFILE;
-    ]
+      ]
+
+  module Host = struct
+    type t = defns
+
+    let of_defns defns = defns
+    let to_defns host  = host
+
+    let iter = iter_defns
+
+    let to_string defns =
+      let buf = Buffer.create 1024 in
+      iter defns
+        (fun o_accmode ->
+           let line = Printf.sprintf "O_ACCMODE\t%d\n" o_accmode in
+           Buffer.add_string buf line
+        )
+        (fun code symbol ->
+           let line = Printf.sprintf "%s\t%d\n" (to_string symbol) code in
+           Buffer.add_string buf line
+        )
+        (fun symbol ->
+           let line = Printf.sprintf "%s\t\n" (to_string symbol) in
+           Buffer.add_string buf line
+        );
+      Buffer.contents buf
+
+    let of_string s =
+      let o_accmode = Scanf.sscanf s "O_ACCMODE\t%d\n" (fun code -> code) in
+      let rec read_lines defns s =
+        match Scanf.sscanf s "%s\t%s\n"
+                (fun symbol_s code_s ->
+                   of_string symbol_s,
+                   (if code_s = ""
+                    then None
+                    else Some (int_of_string code_s)),
+                   String.(length symbol_s + 1 + length code_s + 1)
+                )
+        with
+        | exception End_of_file -> defns
+        | Some symbol, code, off ->
+          read_lines (with_code defns symbol code)
+            String.(sub s off (length s - off))
+        | None, code, off ->
+          read_lines defns String.(sub s off (length s - off))
+      in
+      read_lines (empty_defns o_accmode) s
+
+  end
 
 end
 
-type host = {
-  oflags : Oflags.host;
-}
+module Host = struct
+  type t = {
+    oflags : Oflags.Host.t;
+  }
+
+  let to_string { oflags } = Oflags.Host.to_string oflags
+  let of_string s = { oflags = Oflags.Host.of_string s }
+
+  let iter { oflags=oflags_host } ~oflags =
+    let (f_accmode, f_exist, f_missing) = oflags in
+    Oflags.Host.iter oflags_host f_accmode f_exist f_missing
+end

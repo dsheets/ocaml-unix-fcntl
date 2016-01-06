@@ -1,4 +1,4 @@
-.PHONY: build install uninstall reinstall clean
+.PHONY: build test install uninstall reinstall clean
 
 FINDLIB_NAME=unix-fcntl
 MOD_NAME=unix_fcntl
@@ -10,26 +10,52 @@ CTYPES_LIB_DIR=$(shell ocamlfind query ctypes)
 OCAMLBUILD=CTYPES_LIB_DIR=$(CTYPES_LIB_DIR) OCAML_LIB_DIR=$(OCAML_LIB_DIR) \
 	ocamlbuild -use-ocamlfind -classic-display
 
+WITH_UNIX=$(shell ocamlfind query ctypes unix > /dev/null 2>&1 ; echo $$?)
+
 TARGETS=.cma .cmxa
 
-PRODUCTS=$(addprefix $(MOD_NAME),$(TARGETS)) \
-	lib$(MOD_NAME)_stubs.a dll$(MOD_NAME)_stubs.so
+PRODUCTS=$(addprefix fcntl,$(TARGETS))
+
+ifeq ($(WITH_UNIX), 0)
+PRODUCTS+=$(addprefix $(MOD_NAME),$(TARGETS)) \
+          lib$(MOD_NAME)_stubs.a dll$(MOD_NAME)_stubs.so
+endif
 
 TYPES=.mli .cmi .cmti
 
-INSTALL=$(addprefix fcntl,$(TYPES)) \
-	$(addprefix fcntl_unix, $(TYPES)) \
-	$(addprefix $(MOD_NAME), $(TARGETS))
+INSTALL:=$(addprefix fcntl,$(TYPES)) \
+         $(addprefix fcntl,$(TARGETS))
+
+INSTALL:=$(addprefix _build/lib/,$(INSTALL))
+
+ifeq ($(WITH_UNIX), 0)
+INSTALL_UNIX:=$(addprefix fcntl_unix,$(TYPES)) \
+              $(addprefix $(MOD_NAME),$(TARGETS))
+
+INSTALL_UNIX:=$(addprefix _build/unix/,$(INSTALL_UNIX))
+
+INSTALL+=$(INSTALL_UNIX)
+endif
+
+ARCHIVES:=_build/lib/fcntl.a
+
+ifeq ($(WITH_UNIX), 0)
+ARCHIVES+=_build/unix/$(MOD_NAME).a
+endif
 
 build:
 	$(OCAMLBUILD) $(PRODUCTS)
 
+test: build
+	$(OCAMLBUILD) unix_test/test.native
+	./test.native
+
 install:
 	ocamlfind install $(FINDLIB_NAME) META \
-		$(addprefix _build/lib/,$(INSTALL)) \
-		-dll _build/lib/dll$(MOD_NAME)_stubs.so \
-		-nodll _build/lib/lib$(MOD_NAME)_stubs.a \
-		_build/lib/$(MOD_NAME).a
+		$(INSTALL) \
+		-dll _build/unix/dll$(MOD_NAME)_stubs.so \
+		-nodll _build/unix/lib$(MOD_NAME)_stubs.a \
+		$(ARCHIVES)
 
 uninstall:
 	ocamlfind remove $(FINDLIB_NAME)
@@ -37,5 +63,6 @@ uninstall:
 reinstall: uninstall install
 
 clean:
-	rm -rf _build
-	rm -f lib/fcntl.cm? lib/fcntl_unix.cm? lib/fcntl.o lib/fcntl_unix.o
+	ocamlbuild -clean
+	rm -f lib/fcntl.cm? unix/fcntl_unix.cm? \
+	      lib/fcntl.o unix/fcntl_unix.o

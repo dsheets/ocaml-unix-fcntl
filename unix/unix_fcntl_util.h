@@ -1,3 +1,8 @@
+int unix_fcntl_o_direct();
+int unix_fcntl_o_rsync();
+int unix_fcntl_o_noatime();
+int unix_fcntl_o_path();
+int unix_fcntl_o_dsync();
 int unix_fcntl_o_shlock();
 int unix_fcntl_o_exlock();
 int unix_fcntl_o_evtonly();
@@ -5,3 +10,4 @@ int unix_fcntl_o_symlink();
 int unix_fcntl_o_search();
 int unix_fcntl_o_exec();
 int unix_fcntl_o_tty_init();
+int unix_fcntl_o_tmpfile();

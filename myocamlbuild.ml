@@ -21,12 +21,12 @@ dispatch begin
                ]));
 
     rule "cstubs: lib_gen/x_types_detect -> lib/x_types_detected.ml"
-      ~prods:["lib/%_types_detected.ml"]
+      ~prods:["unix/%_types_detected.ml"]
       ~deps:["lib_gen/%_types_detect"]
       (fun env build ->
          Cmd (S[A(env "lib_gen/%_types_detect");
                 Sh">";
-                A(env "lib/%_types_detected.ml");
+                A(env "unix/%_types_detected.ml");
                ]));
 
     rule "cstubs: lib_gen/x_types.ml -> x_types_detect.c"
@@ -35,17 +35,28 @@ dispatch begin
       (fun env build ->
          Cmd (A(env "lib_gen/%_typegen.byte")));
 
-    copy_rule "cstubs: lib_gen/x_types.ml -> lib/x_types.ml"
-      "lib_gen/%_types.ml" "lib/%_types.ml";
+    rule "fcntl_maps: maps/x -> lib/fcntl_map_x.ml"
+      ~prods:["lib/fcntl_map_%.ml"]
+      ~deps: ["src/fcntl_srcgen.byte"; "maps/%"]
+      (fun env build ->
+         Cmd (S[A"src/fcntl_srcgen.byte";
+                Sh"<";
+                A(env "maps/%");
+                Sh">";
+                A(env "lib/fcntl_map_%.ml");
+               ]));
+
+    copy_rule "cstubs: lib_gen/x_types.ml -> unix/x_types.ml"
+      "lib_gen/%_types.ml" "unix/%_types.ml";
 
     rule "cstubs: lib/x_bindings.ml -> x_stubs.c, x_generated.ml"
-      ~prods:["lib/%_stubs.c"; "lib/%_generated.ml"]
+      ~prods:["unix/%_stubs.c"; "unix/%_generated.ml"]
       ~deps: ["lib_gen/%_bindgen.byte"]
       (fun env build ->
         Cmd (A(env "lib_gen/%_bindgen.byte")));
 
-    copy_rule "cstubs: lib_gen/x_bindings.ml -> lib/x_bindings.ml"
-      "lib_gen/%_bindings.ml" "lib/%_bindings.ml";
+    copy_rule "cstubs: lib_gen/x_bindings.ml -> unix/x_bindings.ml"
+      "lib_gen/%_bindings.ml" "unix/%_bindings.ml";
 
     flag ["c"; "compile"] & S[A"-ccopt"; A"-I/usr/local/include"];
     flag ["c"; "ocamlmklib"] & A"-L/usr/local/lib";
@@ -54,18 +65,18 @@ dispatch begin
 
     (* Linking cstubs *)
     dep ["c"; "compile"; "use_fcntl_util"]
-      ["lib/unix_fcntl_util.o"; "lib/unix_fcntl_util.h"];
+      ["unix/unix_fcntl_util.o"; "unix/unix_fcntl_util.h"];
     flag ["c"; "compile"; "use_ctypes"] & S[A"-I"; A ctypes_libdir];
     flag ["c"; "compile"; "debug"] & A"-g";
 
     (* Linking generated stubs *)
     dep ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"]
-      ["lib/dllunix_fcntl_stubs"-.-(!Options.ext_dll)];
+      ["unix/dllunix_fcntl_stubs"-.-(!Options.ext_dll)];
     flag ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"] &
       S[A"-dllib"; A"-lunix_fcntl_stubs"];
 
     dep ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"]
-      ["lib/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
+      ["unix/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
     flag ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"] &
       S[A"-cclib"; A"-lunix_fcntl_stubs"];
 
@@ -73,7 +84,7 @@ dispatch begin
     flag ["ocaml"; "link"; "byte"; "program"; "use_fcntl_stubs"] &
       S[A"-dllib"; A"-lunix_fcntl_stubs"];
     dep ["ocaml"; "link"; "native"; "program"; "use_fcntl_stubs"]
-      ["lib/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
+      ["unix/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
 
   | _ -> ()
 end;;

@@ -1,5 +1,5 @@
 (*
- * Copyright (c) 2015 David Sheets <sheets@alum.mit.edu>
+ * Copyright (c) 2014-2015 David Sheets <sheets@alum.mit.edu>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,18 +15,16 @@
  *
  *)
 
-open Ctypes
+module Oflags : sig
+  val to_unix_exn : Fcntl.Oflags.t -> Unix.open_flag
+  val to_unix : Fcntl.Oflags.t -> Unix.open_flag option
 
-let () =
-  let prefix = "caml_" in
-  let stubs_oc = open_out "unix/unix_fcntl_stubs.c" in
-  let fmt = Format.formatter_of_out_channel stubs_oc in
-  Format.fprintf fmt "#include <fcntl.h>@.";
-  Format.fprintf fmt "#include \"unix_fcntl_util.h\"@.";
-  Cstubs.write_c fmt ~prefix (module Unix_fcntl_bindings.C);
-  close_out stubs_oc;
+  val of_unix_exn : Unix.open_flag -> Fcntl.Oflags.t
+  val of_unix : Unix.open_flag -> Fcntl.Oflags.t option
 
-  let generated_oc = open_out "unix/unix_fcntl_generated.ml" in
-  let fmt = Format.formatter_of_out_channel generated_oc in
-  Cstubs.write_ml fmt ~prefix (module Unix_fcntl_bindings.C);
-  close_out generated_oc
+  val host : Fcntl.Oflags.Host.t
+end
+
+val host : Fcntl.Host.t
+
+val open_ : string -> ?perms:int -> Fcntl.Oflags.t list -> Unix.file_descr

@@ -1,5 +1,5 @@
 (*
- * Copyright (c) 2014-2015 David Sheets <sheets@alum.mit.edu>
+ * Copyright (c) 2016 David Sheets <sheets@alum.mit.edu>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,16 +15,10 @@
  *
  *)
 
-module Oflags : sig
-  val to_unix_exn : Fcntl.Oflags.t -> Unix.open_flag
-  val to_unix : Fcntl.Oflags.t -> Unix.open_flag option
-
-  val of_unix_exn : Unix.open_flag -> Fcntl.Oflags.t
-  val of_unix : Unix.open_flag -> Fcntl.Oflags.t option
-
-  val host : Fcntl.Oflags.host
+module Linux = struct
+  (*let v4_0_5 = Fcntl_map_linux_4_0_5.host*)
 end
 
-val host : Fcntl.host
-
-val open_ : string -> ?perms:int -> Fcntl.Oflags.t list -> Unix.file_descr
+module OSX = struct
+  let v10_11_2 = Fcntl_map_osx_10_11_2.host
+end
