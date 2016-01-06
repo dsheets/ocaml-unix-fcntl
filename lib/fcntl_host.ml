@@ -16,7 +16,11 @@
  *)
 
 module Linux = struct
-  (*let v4_0_5 = Fcntl_map_linux_4_0_5.host*)
+  module V4_1_12 = struct
+    module Musl = struct
+      let v1_1_12 = Fcntl_map_linux_4_1_12_musl_1_1_12.host
+    end
+  end
 end
 
 module OSX = struct

@@ -16,7 +16,11 @@
  *)
 
 module Linux : sig
-  (*val v4_0_5 : Fcntl.Host.t*)
+  module V4_1_12 : sig
+    module Musl : sig
+      val v1_1_12 : Fcntl.Host.t
+    end
+  end
 end
 
 module OSX : sig
