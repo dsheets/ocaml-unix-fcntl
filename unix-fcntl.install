@@ -1,0 +1,4 @@
+bin: [
+  "?_build/src/fcntl_map.byte" {"fcntl-map"}
+  "_build/src/fcntl_srcgen.byte" {"fcntl-srcgen"}
+]

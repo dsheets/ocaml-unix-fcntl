@@ -18,12 +18,14 @@ PRODUCTS=$(addprefix fcntl,$(TARGETS))
 
 ifeq ($(WITH_UNIX), 0)
 PRODUCTS+=$(addprefix $(MOD_NAME),$(TARGETS)) \
-          lib$(MOD_NAME)_stubs.a dll$(MOD_NAME)_stubs.so
+          lib$(MOD_NAME)_stubs.a dll$(MOD_NAME)_stubs.so \
+          fcntl_map.byte
 endif
 
 TYPES=.mli .cmi .cmti
 
 INSTALL:=$(addprefix fcntl,$(TYPES)) \
+         $(addprefix fcntl_host,$(TYPES)) \
          $(addprefix fcntl,$(TARGETS))
 
 INSTALL:=$(addprefix _build/lib/,$(INSTALL))

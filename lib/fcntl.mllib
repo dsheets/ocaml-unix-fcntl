@@ -1,3 +1,4 @@
 Fcntl
 Fcntl_host
-Fcntl_map_osx_10_11_1
+Fcntl_map_linux_4_1_12_musl_1_1_12
+Fcntl_map_osx_10_11_2
