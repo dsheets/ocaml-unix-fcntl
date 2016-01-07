@@ -82,7 +82,7 @@ dispatch begin
 
     (* Linking tests *)
     flag ["ocaml"; "link"; "byte"; "program"; "use_fcntl_stubs"] &
-      S[A"-dllib"; A"-lunix_fcntl_stubs"];
+      S[A"-dllib"; A"-lunix_fcntl_stubs"; A"-I"; A"unix"];
     dep ["ocaml"; "link"; "native"; "program"; "use_fcntl_stubs"]
       ["unix/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
 
