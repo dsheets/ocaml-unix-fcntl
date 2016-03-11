@@ -1,1 +1,3 @@
-<*.*>: package(lwt.preemptive), thread
+<*.{ml,mli}>: package(lwt.preemptive), thread
+<unix_fcntl_lwt_stubs.c>: use_lwt
+<*.{cma,cmxa}>: use_fcntl_lwt_stubs

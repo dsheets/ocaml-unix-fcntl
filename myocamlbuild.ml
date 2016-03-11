@@ -3,6 +3,7 @@ open Ocamlbuild_pack;;
 
 let ctypes_libdir = Sys.getenv "CTYPES_LIB_DIR" in
 let ocaml_libdir = Sys.getenv "OCAML_LIB_DIR" in
+let lwt_libdir = try Sys.getenv "LWT_LIB_DIR" with Not_found -> "" in
 
 dispatch begin
   function
@@ -67,6 +68,7 @@ dispatch begin
     dep ["c"; "compile"; "use_fcntl_util"]
       ["unix/unix_fcntl_util.o"; "unix/unix_fcntl_util.h"];
     flag ["c"; "compile"; "use_ctypes"] & S[A"-I"; A ctypes_libdir];
+    flag ["c"; "compile"; "use_lwt"] & S[A"-I"; A lwt_libdir];
     flag ["c"; "compile"; "debug"] & A"-g";
 
     (* Linking generated stubs *)
@@ -75,10 +77,13 @@ dispatch begin
     flag ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"] &
       S[A"-dllib"; A"-lunix_fcntl_stubs"];
 
-    dep ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"]
-      ["unix/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
     flag ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"] &
       S[A"-cclib"; A"-lunix_fcntl_stubs"];
+
+    flag ["ocaml"; "link"; "byte"; "library"; "use_fcntl_lwt_stubs"] &
+      S[A"-dllib"; A"-lunix_fcntl_lwt_stubs"];
+    flag ["ocaml"; "link"; "native"; "library"; "use_fcntl_lwt_stubs"] &
+      S[A"-cclib"; A"-lunix_fcntl_lwt_stubs"];
 
     (* Linking tests *)
     flag ["ocaml"; "link"; "byte"; "program"; "use_fcntl_stubs"] &

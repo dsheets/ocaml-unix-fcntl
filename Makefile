@@ -7,8 +7,12 @@ OCAML_LIB_DIR=$(shell ocamlc -where)
 
 CTYPES_LIB_DIR=$(shell ocamlfind query ctypes)
 
-OCAMLBUILD=CTYPES_LIB_DIR=$(CTYPES_LIB_DIR) OCAML_LIB_DIR=$(OCAML_LIB_DIR) \
-	ocamlbuild -use-ocamlfind -classic-display
+LWT_LIB_DIR=$(shell ocamlfind query lwt)
+
+OCAMLBUILD=CTYPES_LIB_DIR=$(CTYPES_LIB_DIR)	\
+           OCAML_LIB_DIR=$(OCAML_LIB_DIR)	\
+           LWT_LIB_DIR=$(LWT_LIB_DIR)		\
+             ocamlbuild -use-ocamlfind -classic-display
 
 WITH_UNIX=$(shell ocamlfind query ctypes unix > /dev/null 2>&1 ; echo $$?)
 WITH_LWT=$(shell ocamlfind query lwt > /dev/null 2>&1 ; echo $$?)
@@ -24,7 +28,8 @@ PRODUCTS+=$(addprefix $(MOD_NAME),$(TARGETS)) \
 endif
 
 ifeq ($(WITH_LWT), 0)
-PRODUCTS+=$(addprefix $(MOD_NAME)_lwt,$(TARGETS))
+PRODUCTS+=$(addprefix $(MOD_NAME)_lwt,$(TARGETS)) \
+          lib$(MOD_NAME)_lwt_stubs.a dll$(MOD_NAME)_lwt_stubs.so
 endif
 
 TYPES=.mli .cmi .cmti
@@ -45,7 +50,7 @@ INSTALL+=$(INSTALL_UNIX)
 endif
 
 ifeq ($(WITH_LWT), 0)
-INSTALL_LWT:=$(addprefix $(MOD_NAME)_lwt,$(TYPES)) \
+INSTALL_LWT:=$(addprefix fcntl_unix_lwt,$(TYPES)) \
              $(addprefix $(MOD_NAME)_lwt,$(TARGETS))
 
 INSTALL_LWT:=$(addprefix _build/lwt/,$(INSTALL_LWT))
@@ -73,8 +78,10 @@ test: build
 install:
 	ocamlfind install $(FINDLIB_NAME) META \
 		$(INSTALL) \
-		-dll _build/unix/dll$(MOD_NAME)_stubs.so \
-		-nodll _build/unix/lib$(MOD_NAME)_stubs.a \
+                -dll _build/unix/dll$(MOD_NAME)_stubs.so \
+                -nodll _build/unix/lib$(MOD_NAME)_stubs.a \
+                -dll _build/lwt/dll$(MOD_NAME)_lwt_stubs.so \
+                -nodll _build/lwt/lib$(MOD_NAME)_lwt_stubs.a \
 		$(ARCHIVES)
 
 uninstall:

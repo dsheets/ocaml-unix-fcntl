@@ -17,7 +17,7 @@ package "unix" (
 )
 
 package "lwt" (
-  requires = "unix-fcntl lwt.preemptive"
+  requires = "threads unix-fcntl.unix lwt.preemptive"
   archive(byte) = "unix_fcntl_lwt.cma"
   archive(byte, plugin) = "unix_fcntl_lwt.cma"
   archive(native) = "unix_fcntl_lwt.cmxa"
