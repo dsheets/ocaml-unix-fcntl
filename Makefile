@@ -11,6 +11,7 @@ OCAMLBUILD=CTYPES_LIB_DIR=$(CTYPES_LIB_DIR) OCAML_LIB_DIR=$(OCAML_LIB_DIR) \
 	ocamlbuild -use-ocamlfind -classic-display
 
 WITH_UNIX=$(shell ocamlfind query ctypes unix > /dev/null 2>&1 ; echo $$?)
+WITH_LWT=$(shell ocamlfind query lwt > /dev/null 2>&1 ; echo $$?)
 
 TARGETS=.cma .cmxa
 
@@ -20,6 +21,10 @@ ifeq ($(WITH_UNIX), 0)
 PRODUCTS+=$(addprefix $(MOD_NAME),$(TARGETS)) \
           lib$(MOD_NAME)_stubs.a dll$(MOD_NAME)_stubs.so \
           fcntl_map.byte
+endif
+
+ifeq ($(WITH_LWT), 0)
+PRODUCTS+=$(addprefix $(MOD_NAME)_lwt,$(TARGETS))
 endif
 
 TYPES=.mli .cmi .cmti
@@ -39,10 +44,23 @@ INSTALL_UNIX:=$(addprefix _build/unix/,$(INSTALL_UNIX))
 INSTALL+=$(INSTALL_UNIX)
 endif
 
+ifeq ($(WITH_LWT), 0)
+INSTALL_LWT:=$(addprefix $(MOD_NAME)_lwt,$(TYPES)) \
+             $(addprefix $(MOD_NAME)_lwt,$(TARGETS))
+
+INSTALL_LWT:=$(addprefix _build/lwt/,$(INSTALL_LWT))
+
+INSTALL+=$(INSTALL_LWT)
+endif
+
 ARCHIVES:=_build/lib/fcntl.a
 
 ifeq ($(WITH_UNIX), 0)
 ARCHIVES+=_build/unix/$(MOD_NAME).a
+endif
+
+ifeq ($(WITH_LWT), 0)
+ARCHIVES+=_build/lwt/$(MOD_NAME)_lwt.a
 endif
 
 build:
