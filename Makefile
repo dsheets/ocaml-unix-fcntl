@@ -72,7 +72,7 @@ build:
 	$(OCAMLBUILD) $(PRODUCTS)
 
 test: build
-	$(OCAMLBUILD) unix_test/test.native
+	$(OCAMLBUILD) lwt_test/test.native
 	./test.native
 
 install:
