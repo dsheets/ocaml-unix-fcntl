@@ -70,13 +70,9 @@ dispatch begin
     flag ["c"; "compile"; "debug"] & A"-g";
 
     (* Linking generated stubs *)
-    dep ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"]
-      ["unix/dllunix_fcntl_stubs"-.-(!Options.ext_dll)];
     flag ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"] &
       S[A"-dllib"; A"-lunix_fcntl_stubs"];
 
-    dep ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"]
-      ["unix/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
     flag ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"] &
       S[A"-cclib"; A"-lunix_fcntl_stubs"];
 
