@@ -43,9 +43,10 @@ int unix_fcntl_o_noatime() {
 #endif
 }
 
+// NOT OS X or FreeBSD or older Linux
+
 int unix_fcntl_o_path() {
-#define O_PATH_UNAVAILABLE (APPLE || FREEBSD)
-#if !FORCE_CHECK && O_PATH_UNAVAILABLE && !defined(O_PATH)
+#if !FORCE_CHECK && !defined(O_PATH)
   return -1;
 #else
   return O_PATH;
