@@ -1,2 +1,3 @@
-<*.*>: thread, package(unix-fcntl.lwt), package(lwt.unix), package(alcotest)
-<*.*>: package(unix-type-representations)
+<*.*>: thread, package(unix-errno.unix), package(lwt.unix), package(alcotest)
+<*.*>: package(unix-type-representations), package(ctypes.stubs)
+<*.*>: use_fcntl_stubs, use_fcntl_lwt_stubs

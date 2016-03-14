@@ -72,11 +72,8 @@ dispatch begin
     flag ["c"; "compile"; "debug"] & A"-g";
 
     (* Linking generated stubs *)
-    dep ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"]
-      ["unix/dllunix_fcntl_stubs"-.-(!Options.ext_dll)];
     flag ["ocaml"; "link"; "byte"; "library"; "use_fcntl_stubs"] &
       S[A"-dllib"; A"-lunix_fcntl_stubs"];
-
     flag ["ocaml"; "link"; "native"; "library"; "use_fcntl_stubs"] &
       S[A"-cclib"; A"-lunix_fcntl_stubs"];
 
@@ -90,6 +87,11 @@ dispatch begin
       S[A"-dllib"; A"-lunix_fcntl_stubs"; A"-I"; A"unix"];
     dep ["ocaml"; "link"; "native"; "program"; "use_fcntl_stubs"]
       ["unix/libunix_fcntl_stubs"-.-(!Options.ext_lib)];
+
+    flag ["ocaml"; "link"; "byte"; "program"; "use_fcntl_lwt_stubs"] &
+      S[A"-dllib"; A"-lunix_fcntl_lwt_stubs"; A"-I"; A"unix"];
+    dep ["ocaml"; "link"; "native"; "program"; "use_fcntl_lwt_stubs"]
+      ["lwt/libunix_fcntl_lwt_stubs"-.-(!Options.ext_lib)];
 
   | _ -> ()
 end;;
