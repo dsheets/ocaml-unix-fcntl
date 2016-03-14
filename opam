@@ -19,6 +19,7 @@ depends: [
   "ctypes" {>= "0.4.0"}
   "unix-errno" {>= "0.2.0"}
   "alcotest" {test}
+  "unix-type-representations"
 ]
 depopts: [
   "lwt"

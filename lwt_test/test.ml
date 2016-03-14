@@ -26,7 +26,7 @@ struct
 
         (* Opening a symlink with O_NOFOLLOW should fail with ELOOP *)
         Alcotest.check_raises "O_NOFOLLOW fails with ELOOP"
-          (Unix.Unix_error (Unix.ELOOP, "open", symlink))
+          Errno.(Error { errno = [ELOOP]; call = "open"; label = symlink})
           (fun () ->
              ignore @@
              Lwt_unix.run

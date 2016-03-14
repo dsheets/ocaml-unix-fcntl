@@ -49,10 +49,11 @@ static void worker_open(struct job_open *job)
 
 static value result_open(struct job_open *job)
 {
-  int fd = job->fd;
-  LWT_UNIX_CHECK_JOB_ARG(job, fd < 0, "open", job->name);
+  value result = caml_alloc_tuple(2);
+  Field(result, 0) = Val_int(job->fd);
+  Field(result, 1) = Val_bool(job->error_code);
   lwt_unix_free_job(&job->job);
-  return Val_int(fd);
+  return result;
 }
 
 CAMLprim
