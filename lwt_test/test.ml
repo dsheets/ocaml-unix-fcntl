@@ -33,11 +33,20 @@ struct
                (Fcntl_unix_lwt.open_ symlink Fcntl.Oflags.[O_NOFOLLOW]))
         ;
 
-        (* Opening a symlink with O_NOFOLLOW|OPATH should succeed *)
+        (* Opening a non-dangling symlink for reading should succeed *)
         ignore @@
         Lwt_unix.run
-          (Fcntl_unix_lwt.open_ symlink Fcntl.Oflags.[O_NOFOLLOW;
-                                                      O_PATH]);
+          (Fcntl_unix_lwt.open_ symlink Fcntl.Oflags.[O_RDONLY]);
+
+        (* If O_PATH exists, opening a symlink with O_NOFOLLOW|O_PATH
+           should succeed *)
+        let host = Fcntl_unix.Oflags.host in
+        match Fcntl.Oflags.((Host.to_defns host).o_path) with
+        | None -> ()
+        | Some _ ->
+          ignore @@
+          Lwt_unix.run
+            (Fcntl_unix_lwt.open_ symlink Fcntl.Oflags.[O_NOFOLLOW; O_PATH])
       with e ->
         cleanup ();
         raise e
@@ -56,4 +65,4 @@ let tests = [
 ]
 
 
-let () = Alcotest.run "Dirent_unix" tests
+let () = Alcotest.run "Fcntl_unix_lwt" tests
