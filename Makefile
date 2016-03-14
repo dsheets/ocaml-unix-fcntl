@@ -61,11 +61,16 @@ endif
 ARCHIVES:=_build/lib/fcntl.a
 
 ifeq ($(WITH_UNIX), 0)
-ARCHIVES+=_build/unix/$(MOD_NAME).a
+ARCHIVES+=_build/unix/$(MOD_NAME).a \
+	  -dll _build/unix/dll$(MOD_NAME)_stubs.so \
+	  -nodll _build/unix/lib$(MOD_NAME)_stubs.a
+
 endif
 
 ifeq ($(WITH_LWT), 0)
-ARCHIVES+=_build/lwt/$(MOD_NAME)_lwt.a
+ARCHIVES+=_build/lwt/$(MOD_NAME)_lwt.a \
+	   -dll _build/lwt/dll$(MOD_NAME)_lwt_stubs.so \
+	   -nodll _build/lwt/lib$(MOD_NAME)_lwt_stubs.a
 endif
 
 build:
@@ -76,13 +81,7 @@ test: build
 	./test.native
 
 install:
-	ocamlfind install $(FINDLIB_NAME) META \
-		$(INSTALL) \
-                -dll _build/unix/dll$(MOD_NAME)_stubs.so \
-                -nodll _build/unix/lib$(MOD_NAME)_stubs.a \
-                -dll _build/lwt/dll$(MOD_NAME)_lwt_stubs.so \
-                -nodll _build/lwt/lib$(MOD_NAME)_lwt_stubs.a \
-		$(ARCHIVES)
+	ocamlfind install $(FINDLIB_NAME) META $(INSTALL) $(ARCHIVES)
 
 uninstall:
 	ocamlfind remove $(FINDLIB_NAME)
