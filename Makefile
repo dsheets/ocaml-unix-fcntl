@@ -15,7 +15,7 @@ OCAMLBUILD=CTYPES_LIB_DIR=$(CTYPES_LIB_DIR)	\
              ocamlbuild -use-ocamlfind -classic-display
 
 WITH_UNIX=$(shell ocamlfind query ctypes unix > /dev/null 2>&1 ; echo $$?)
-WITH_LWT=$(shell ocamlfind query lwt > /dev/null 2>&1 ; echo $$?)
+WITH_LWT=$(shell ocamlfind query lwt threads > /dev/null 2>&1 ; echo $$?)
 
 TARGETS=.cma .cmxa
 
