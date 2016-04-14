@@ -266,7 +266,10 @@ module Oflags = struct
     in fun code -> bit lor code
 
   (* This can't roundtrip [] because O_RDONLY is 0 *)
-  let to_code ~host = List.fold_left (fun code t -> set ~host t code) 0
+  let to_code_exn ~host = List.fold_left (fun code t -> set ~host t code) 0
+
+  let to_code ~host l =
+    try Some (to_code_exn ~host l) with Not_found -> None
 
   let with_code defns symbol code = match symbol with
     | O_RDONLY    -> { defns with o_rdonly = code }

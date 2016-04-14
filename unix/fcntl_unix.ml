@@ -110,9 +110,6 @@ module Oflags = struct
     })) in
     Oflags.Host.of_defns defns
 
-  let view ~host = Oflags.(
-    Ctypes.(view ~read:(of_code ~host) ~write:(to_code ~host) int)
-  )
 end
 
 let host = {
@@ -120,7 +117,7 @@ let host = {
 }
 
 let open_ path ?perms oflags =
-  let oflags = Fcntl.(Oflags.to_code ~host:host.Host.oflags oflags) in
+  let oflags = Fcntl.(Oflags.to_code_exn ~host:host.Host.oflags oflags) in
   Errno_unix.raise_on_errno ~call:"open" ~label:path (fun () ->
     match perms with
     | None       -> C.open_ (Some path) oflags
