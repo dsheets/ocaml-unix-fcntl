@@ -323,6 +323,10 @@ module Oflags = struct
         O_NOATIME;
         O_PATH;
         O_TMPFILE;
+        O_SHLOCK;
+        O_EXLOCK;
+        O_EVTONLY;
+        O_SYMLINK;
       ]
 
   module Host = struct
