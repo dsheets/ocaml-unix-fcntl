@@ -25,3 +25,4 @@ depopts: [
   "lwt"
   "base-threads"
 ]
+available: [ ocaml-version >= "4.02.0" ]
