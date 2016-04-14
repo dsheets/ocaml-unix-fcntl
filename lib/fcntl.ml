@@ -49,28 +49,28 @@ module Oflags = struct
 
   type defns = {
     o_accmode   : int;
-    o_rdonly    : int option;
-    o_wronly    : int option;
-    o_rdwr      : int option;
+    o_cloexec   : int option;
     o_creat     : int option;
+    o_directory : int option;
     o_excl      : int option;
     o_noctty    : int option;
-    o_trunc     : int option;
-    o_append    : int option;
-    o_nonblock  : int option;
-    o_sync      : int option;
-    o_async     : int option;
-    o_dsync     : int option;
-    o_rsync     : int option;
-    o_directory : int option;
     o_nofollow  : int option;
-    o_cloexec   : int option;
+    o_trunc     : int option;
+    o_tty_init  : int option;
+    o_append    : int option;
+    o_dsync     : int option;
+    o_nonblock  : int option;
+    o_rsync     : int option;
+    o_sync      : int option;
+    o_exec      : int option;
+    o_rdonly    : int option;
+    o_rdwr      : int option;
+    o_search    : int option;
+    o_wronly    : int option;
+    o_async     : int option;
     o_direct    : int option;
     o_noatime   : int option;
     o_path      : int option;
-    o_tty_init  : int option;
-    o_exec      : int option;
-    o_search    : int option;
     o_tmpfile   : int option;
     o_shlock    : int option;
     o_exlock    : int option;
@@ -80,28 +80,28 @@ module Oflags = struct
 
   let empty_defns o_accmode = {
     o_accmode;
-    o_rdonly    = None;
-    o_wronly    = None;
-    o_rdwr      = None;
+    o_cloexec   = None;
     o_creat     = None;
+    o_directory = None;
     o_excl      = None;
     o_noctty    = None;
-    o_trunc     = None;
-    o_append    = None;
-    o_nonblock  = None;
-    o_sync      = None;
-    o_async     = None;
-    o_dsync     = None;
-    o_rsync     = None;
-    o_directory = None;
     o_nofollow  = None;
-    o_cloexec   = None;
+    o_trunc     = None;
+    o_tty_init  = None;
+    o_append    = None;
+    o_dsync     = None;
+    o_nonblock  = None;
+    o_rsync     = None;
+    o_sync      = None;
+    o_exec      = None;
+    o_rdonly    = None;
+    o_rdwr      = None;
+    o_search    = None;
+    o_wronly    = None;
+    o_async     = None;
     o_direct    = None;
     o_noatime   = None;
     o_path      = None;
-    o_tty_init  = None;
-    o_exec      = None;
-    o_search    = None;
     o_tmpfile   = None;
     o_shlock    = None;
     o_exlock    = None;
@@ -110,61 +110,63 @@ module Oflags = struct
   }
 
   let iter_defns defns f_accmode f_exist f_missing =
-    f_accmode defns.o_accmode;
-    (match defns.o_rdonly with
-     | Some x -> f_exist x O_RDONLY | None -> f_missing O_RDONLY);
-    (match defns.o_wronly with
-     | Some x -> f_exist x O_WRONLY | None -> f_missing O_WRONLY);
-    (match defns.o_rdwr with
-     | Some x -> f_exist x O_RDWR | None -> f_missing O_RDWR);
-    (match defns.o_creat with
-     | Some x -> f_exist x O_CREAT | None -> f_missing O_CREAT);
-    (match defns.o_excl with
-     | Some x -> f_exist x O_EXCL | None -> f_missing O_EXCL);
-    (match defns.o_noctty with
-     | Some x -> f_exist x O_NOCTTY | None -> f_missing O_NOCTTY);
-    (match defns.o_trunc with
-     | Some x -> f_exist x O_TRUNC | None -> f_missing O_TRUNC);
-    (match defns.o_append with
-     | Some x -> f_exist x O_APPEND | None -> f_missing O_APPEND);
-    (match defns.o_nonblock with
-     | Some x -> f_exist x O_NONBLOCK | None -> f_missing O_NONBLOCK);
-    (match defns.o_sync with
-     | Some x -> f_exist x O_SYNC | None -> f_missing O_SYNC);
-    (match defns.o_async with
-     | Some x -> f_exist x O_ASYNC | None -> f_missing O_ASYNC);
-    (match defns.o_dsync with
-     | Some x -> f_exist x O_DSYNC | None -> f_missing O_DSYNC);
-    (match defns.o_rsync with
-     | Some x -> f_exist x O_RSYNC | None -> f_missing O_RSYNC);
-    (match defns.o_directory with
-     | Some x -> f_exist x O_DIRECTORY | None -> f_missing O_DIRECTORY);
-    (match defns.o_nofollow with
-     | Some x -> f_exist x O_NOFOLLOW | None -> f_missing O_NOFOLLOW);
-    (match defns.o_cloexec with
-     | Some x -> f_exist x O_CLOEXEC | None -> f_missing O_CLOEXEC);
-    (match defns.o_direct with
-     | Some x -> f_exist x O_DIRECT | None -> f_missing O_DIRECT);
-    (match defns.o_noatime with
-     | Some x -> f_exist x O_NOATIME | None -> f_missing O_NOATIME);
-    (match defns.o_path with
-     | Some x -> f_exist x O_PATH | None -> f_missing O_PATH);
-    (match defns.o_tty_init with
-     | Some x -> f_exist x O_TTY_INIT | None -> f_missing O_TTY_INIT);
-    (match defns.o_exec with
-     | Some x -> f_exist x O_EXEC | None -> f_missing O_EXEC);
-    (match defns.o_search with
-     | Some x -> f_exist x O_SEARCH | None -> f_missing O_SEARCH);
-    (match defns.o_tmpfile with
-     | Some x -> f_exist x O_TMPFILE | None -> f_missing O_TMPFILE);
-    (match defns.o_shlock with
-     | Some x -> f_exist x O_SHLOCK | None -> f_missing O_SHLOCK);
-    (match defns.o_exlock with
-     | Some x -> f_exist x O_EXLOCK | None -> f_missing O_EXLOCK);
-    (match defns.o_evtonly with
-     | Some x -> f_exist x O_EVTONLY | None -> f_missing O_EVTONLY);
-    (match defns.o_symlink with
-     | Some x -> f_exist x O_SYMLINK | None -> f_missing O_SYMLINK)
+    begin
+      f_accmode defns.o_accmode;
+      (match defns.o_cloexec with
+       | Some x -> f_exist x O_CLOEXEC | None -> f_missing O_CLOEXEC);
+      (match defns.o_creat with
+       | Some x -> f_exist x O_CREAT | None -> f_missing O_CREAT);
+      (match defns.o_directory with
+       | Some x -> f_exist x O_DIRECTORY | None -> f_missing O_DIRECTORY);
+      (match defns.o_excl with
+       | Some x -> f_exist x O_EXCL | None -> f_missing O_EXCL);
+      (match defns.o_noctty with
+       | Some x -> f_exist x O_NOCTTY | None -> f_missing O_NOCTTY);
+      (match defns.o_nofollow with
+       | Some x -> f_exist x O_NOFOLLOW | None -> f_missing O_NOFOLLOW);
+      (match defns.o_trunc with
+       | Some x -> f_exist x O_TRUNC | None -> f_missing O_TRUNC);
+      (match defns.o_tty_init with
+       | Some x -> f_exist x O_TTY_INIT | None -> f_missing O_TTY_INIT);
+      (match defns.o_append with
+       | Some x -> f_exist x O_APPEND | None -> f_missing O_APPEND);
+      (match defns.o_dsync with
+       | Some x -> f_exist x O_DSYNC | None -> f_missing O_DSYNC);
+      (match defns.o_nonblock with
+       | Some x -> f_exist x O_NONBLOCK | None -> f_missing O_NONBLOCK);
+      (match defns.o_rsync with
+       | Some x -> f_exist x O_RSYNC | None -> f_missing O_RSYNC);
+      (match defns.o_sync with
+       | Some x -> f_exist x O_SYNC | None -> f_missing O_SYNC);
+      (match defns.o_exec with
+       | Some x -> f_exist x O_EXEC | None -> f_missing O_EXEC);
+      (match defns.o_rdonly with
+       | Some x -> f_exist x O_RDONLY | None -> f_missing O_RDONLY);
+      (match defns.o_rdwr with
+       | Some x -> f_exist x O_RDWR | None -> f_missing O_RDWR);
+      (match defns.o_search with
+       | Some x -> f_exist x O_SEARCH | None -> f_missing O_SEARCH);
+      (match defns.o_wronly with
+       | Some x -> f_exist x O_WRONLY | None -> f_missing O_WRONLY);
+      (match defns.o_async with
+       | Some x -> f_exist x O_ASYNC | None -> f_missing O_ASYNC);
+      (match defns.o_direct with
+       | Some x -> f_exist x O_DIRECT | None -> f_missing O_DIRECT);
+      (match defns.o_noatime with
+       | Some x -> f_exist x O_NOATIME | None -> f_missing O_NOATIME);
+      (match defns.o_path with
+       | Some x -> f_exist x O_PATH | None -> f_missing O_PATH);
+      (match defns.o_tmpfile with
+       | Some x -> f_exist x O_TMPFILE | None -> f_missing O_TMPFILE);
+      (match defns.o_shlock with
+       | Some x -> f_exist x O_SHLOCK | None -> f_missing O_SHLOCK);
+      (match defns.o_exlock with
+       | Some x -> f_exist x O_EXLOCK | None -> f_missing O_EXLOCK);
+      (match defns.o_evtonly with
+       | Some x -> f_exist x O_EVTONLY | None -> f_missing O_EVTONLY);
+      (match defns.o_symlink with
+       | Some x -> f_exist x O_SYMLINK | None -> f_missing O_SYMLINK);
+    end
 
   let to_string = function
     | O_CLOEXEC -> "O_CLOEXEC"
@@ -226,28 +228,28 @@ module Oflags = struct
     | _ -> None
 
   let _to_code ~host = let defns = host in function
-    | O_RDONLY    -> defns.o_rdonly
-    | O_WRONLY    -> defns.o_wronly
-    | O_RDWR      -> defns.o_rdwr
+    | O_CLOEXEC   -> defns.o_cloexec
     | O_CREAT     -> defns.o_creat
+    | O_DIRECTORY -> defns.o_directory
     | O_EXCL      -> defns.o_excl
     | O_NOCTTY    -> defns.o_noctty
-    | O_TRUNC     -> defns.o_trunc
-    | O_APPEND    -> defns.o_append
-    | O_NONBLOCK  -> defns.o_nonblock
-    | O_SYNC      -> defns.o_sync
-    | O_ASYNC     -> defns.o_async
-    | O_DSYNC     -> defns.o_dsync
-    | O_RSYNC     -> defns.o_rsync
-    | O_DIRECTORY -> defns.o_directory
     | O_NOFOLLOW  -> defns.o_nofollow
-    | O_CLOEXEC   -> defns.o_cloexec
+    | O_TRUNC     -> defns.o_trunc
+    | O_TTY_INIT  -> defns.o_tty_init
+    | O_APPEND    -> defns.o_append
+    | O_DSYNC     -> defns.o_dsync
+    | O_NONBLOCK  -> defns.o_nonblock
+    | O_RSYNC     -> defns.o_rsync
+    | O_SYNC      -> defns.o_sync
+    | O_EXEC      -> defns.o_exec
+    | O_RDONLY    -> defns.o_rdonly
+    | O_RDWR      -> defns.o_rdwr
+    | O_SEARCH    -> defns.o_search
+    | O_WRONLY    -> defns.o_wronly
+    | O_ASYNC     -> defns.o_async
     | O_DIRECT    -> defns.o_direct
     | O_NOATIME   -> defns.o_noatime
     | O_PATH      -> defns.o_path
-    | O_TTY_INIT  -> defns.o_tty_init
-    | O_EXEC      -> defns.o_exec
-    | O_SEARCH    -> defns.o_search
     | O_TMPFILE   -> defns.o_tmpfile
     | O_SHLOCK    -> defns.o_shlock
     | O_EXLOCK    -> defns.o_exlock
@@ -269,28 +271,28 @@ module Oflags = struct
   let to_code ~host = List.fold_left (fun code t -> set ~host t code) 0
 
   let with_code defns symbol code = match symbol with
-    | O_RDONLY    -> { defns with o_rdonly = code }
-    | O_WRONLY    -> { defns with o_wronly = code }
-    | O_RDWR      -> { defns with o_rdwr = code }
+    | O_CLOEXEC   -> { defns with o_cloexec = code }
     | O_CREAT     -> { defns with o_creat = code }
+    | O_DIRECTORY -> { defns with o_directory = code }
     | O_EXCL      -> { defns with o_excl = code }
     | O_NOCTTY    -> { defns with o_noctty = code }
-    | O_TRUNC     -> { defns with o_trunc = code }
-    | O_APPEND    -> { defns with o_append = code }
-    | O_NONBLOCK  -> { defns with o_nonblock = code }
-    | O_SYNC      -> { defns with o_sync = code }
-    | O_ASYNC     -> { defns with o_async = code }
-    | O_DSYNC     -> { defns with o_dsync = code }
-    | O_RSYNC     -> { defns with o_rsync = code }
-    | O_DIRECTORY -> { defns with o_directory = code }
     | O_NOFOLLOW  -> { defns with o_nofollow = code }
-    | O_CLOEXEC   -> { defns with o_cloexec = code }
+    | O_TRUNC     -> { defns with o_trunc = code }
+    | O_TTY_INIT  -> { defns with o_tty_init = code }
+    | O_APPEND    -> { defns with o_append = code }
+    | O_DSYNC     -> { defns with o_dsync = code }
+    | O_NONBLOCK  -> { defns with o_nonblock = code }
+    | O_RSYNC     -> { defns with o_rsync = code }
+    | O_SYNC      -> { defns with o_sync = code }
+    | O_EXEC      -> { defns with o_exec = code }
+    | O_RDONLY    -> { defns with o_rdonly = code }
+    | O_RDWR      -> { defns with o_rdwr = code }
+    | O_SEARCH    -> { defns with o_search = code }
+    | O_WRONLY    -> { defns with o_wronly = code }
+    | O_ASYNC     -> { defns with o_async = code }
     | O_DIRECT    -> { defns with o_direct = code }
     | O_NOATIME   -> { defns with o_noatime = code }
     | O_PATH      -> { defns with o_path = code }
-    | O_TTY_INIT  -> { defns with o_tty_init = code }
-    | O_EXEC      -> { defns with o_exec = code }
-    | O_SEARCH    -> { defns with o_search = code }
     | O_TMPFILE   -> { defns with o_tmpfile = code }
     | O_SHLOCK    -> { defns with o_shlock = code }
     | O_EXLOCK    -> { defns with o_exlock = code }
@@ -323,6 +325,10 @@ module Oflags = struct
         O_NOATIME;
         O_PATH;
         O_TMPFILE;
+        O_SHLOCK;
+        O_EXLOCK;
+        O_EVTONLY;
+        O_SYMLINK;
       ]
 
   module Host = struct
