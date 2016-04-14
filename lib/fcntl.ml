@@ -262,13 +262,18 @@ module Oflags = struct
     in fun code -> exist && match t with
     | O_RDONLY | O_TTY_INIT -> code = bit
     | _ -> (bit land code) = bit
-  let set ~host t =
+  let set_exn ~host t =
     let bit = match _to_code ~host t with
       | Some bit -> bit | None -> raise Not_found
     in fun code -> bit lor code
+  let set ~host t code =
+    try Some (set_exn ~host t code) with Not_found -> None
 
   (* This can't roundtrip [] because O_RDONLY is 0 *)
-  let to_code ~host = List.fold_left (fun code t -> set ~host t code) 0
+  let to_code_exn ~host = List.fold_left (fun code t -> set_exn ~host t code) 0
+
+  let to_code ~host l =
+    try Some (to_code_exn ~host l) with Not_found -> None
 
   let with_code defns symbol code = match symbol with
     | O_CLOEXEC   -> { defns with o_cloexec = code }

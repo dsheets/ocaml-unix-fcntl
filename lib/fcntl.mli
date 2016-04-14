@@ -92,11 +92,13 @@ module Oflags : sig
       -> (int -> unit) -> (int -> oflag -> unit) -> (oflag -> unit) -> unit
   end
 
-  val to_code : host:Host.t -> t list -> int
+  val to_code : host:Host.t -> t list -> int option
+  val to_code_exn : host:Host.t -> t list -> int
   val of_code : host:Host.t -> int -> t list
 
   val is_set : host:Host.t -> t -> int -> bool
-  val set : host:Host.t -> t -> int -> int
+  val set : host:Host.t -> t -> int -> int option
+  val set_exn : host:Host.t -> t -> int -> int
 
   val to_string : t -> string
 

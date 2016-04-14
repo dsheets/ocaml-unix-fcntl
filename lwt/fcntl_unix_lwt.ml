@@ -26,7 +26,7 @@ let raise_errno_error ~call ~label errno =
 let open_ : string -> ?perms:int -> Fcntl.Oflags.t list -> Unix.file_descr Lwt.t
   = fun name ?perms flags ->
     let open Lwt in
-    let flags = Fcntl.Oflags.to_code ~host:Fcntl_unix.host.Fcntl.Host.oflags flags in
+    let flags = Fcntl.Oflags.to_code_exn ~host:Fcntl_unix.host.Fcntl.Host.oflags flags in
     Lwt_unix.run_job (make_open_job ~name ~flags ~perms) >>= fun (fd, errno) ->
     if Unix_representations.int_of_file_descr fd < 0
     then raise_errno_error ~call:"open" ~label:name errno
