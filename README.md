@@ -17,6 +17,8 @@ in the standard OCaml `Unix` module.  The [`Fcntl_unix_lwt`][fcntl_unix_lwt]
 module exports non-blocking versions of the functions in `Fcntl_unix` based on
 the [`Lwt`][lwt] cooperative threading library.
 
+Currently open flags and the `open(2)` function are bound.
+
 [fcntl.h]: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/fcntl.h.html
 [fcntl]: https://github.com/dsheets/ocaml-unix-fcntl/blob/master/lib/fcntl.mli
 [fcntl_host]: https://github.com/dsheets/ocaml-unix-fcntl/blob/master/lib/fcntl_host.mli

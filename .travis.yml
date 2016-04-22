@@ -2,10 +2,12 @@ language: c
 sudo: false
 services:
   - docker
-install: wget https://raw.githubusercontent.com/ocaml/ocaml-travisci-skeleton/master/.travis-docker.sh
+install: wget https://raw.githubusercontent.com/dsheets/ocaml-travisci-skeleton/baseless-removal-demands/.travis-docker.sh
 script: bash ./.travis-docker.sh
 env:
  global:
+   - FORK_USER="dsheets"
+   - FORK_BRANCH="baseless-removal-demands"
    - PACKAGE="unix-fcntl"
    - DEPOPTS="*"
  matrix:

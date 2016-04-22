@@ -15,19 +15,23 @@
  *
  *)
 
-external make_open_job :
-  name:string -> flags:int -> perms:int option -> (Unix.file_descr * int) Lwt_unix.job =
-  "unix_fcntl_lwt_open_job"
+external make_open_job
+  : name:string -> flags:int -> perms:int option ->
+  (Unix.file_descr * int) Lwt_unix.job
+  = "unix_fcntl_lwt_open_job"
 
 let raise_errno_error ~call ~label errno =
-  let error_list = Errno.of_code ~host:Errno_unix.host errno in
-  Lwt.fail Errno.(Error { errno = error_list; call; label })
+  let errno = Errno.of_code ~host:Errno_unix.host errno in
+  Lwt.fail Errno.(Error { errno; call; label })
 
-let open_ : string -> ?perms:int -> Fcntl.Oflags.t list -> Unix.file_descr Lwt.t
+let open_
+  : string -> ?perms:int -> Fcntl.Oflags.t list -> Unix.file_descr Lwt.t
   = fun name ?perms flags ->
-    let open Lwt in
-    let flags = Fcntl.Oflags.to_code_exn ~host:Fcntl_unix.host.Fcntl.Host.oflags flags in
-    Lwt_unix.run_job (make_open_job ~name ~flags ~perms) >>= fun (fd, errno) ->
+    let open Lwt.Infix in
+    let host = Fcntl_unix.host.Fcntl.Host.oflags in
+    let flags = Fcntl.Oflags.to_code_exn ~host flags in
+    Lwt_unix.run_job (make_open_job ~name ~flags ~perms)
+    >>= fun (fd, errno) ->
     if Unix_representations.int_of_file_descr fd < 0
     then raise_errno_error ~call:"open" ~label:name errno
-    else return fd
+    else Lwt.return fd
