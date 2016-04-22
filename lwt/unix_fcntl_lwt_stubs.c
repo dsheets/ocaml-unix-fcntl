@@ -51,7 +51,7 @@ static value result_open(struct job_open *job)
 {
   value result = caml_alloc_tuple(2);
   Field(result, 0) = Val_int(job->fd);
-  Field(result, 1) = Val_bool(job->error_code);
+  Field(result, 1) = Val_int(job->error_code);
   lwt_unix_free_job(&job->job);
   return result;
 }
