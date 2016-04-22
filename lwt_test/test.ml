@@ -52,10 +52,17 @@ struct
         raise e
     end;
     cleanup ()
-      
+
+  let errno () =
+    Alcotest.check_raises "ENOENT fails with ENOENT"
+      Errno.(Error { errno = [ ENOENT ]; call = "open"; label = "ENOENT" })
+      (fun () ->
+         ignore (Lwt_unix.run (Fcntl_unix_lwt.open_ "ENOENT" []))
+      )
 
   let tests = [
     "nofollow", `Quick, nofollow;
+    "errno", `Quick, errno;
   ]
 end
 
