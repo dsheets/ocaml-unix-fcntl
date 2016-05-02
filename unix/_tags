@@ -1,3 +1,4 @@
 <*.{ml,mli}>: package(bytes), package(ctypes.stubs), package(unix-errno)
+<*.{ml,mli}>: package(unix-type-representations)
 <unix_fcntl_stubs.c>: use_ctypes, use_fcntl_util
 <*.{cma,cmxa}>: use_fcntl_stubs
