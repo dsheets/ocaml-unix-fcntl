@@ -1,4 +1,4 @@
-version = "0.3.1"
+version = "0.3.2"
 description = "Unix fcntl types, maps, and support"
 requires = ""
 archive(byte) = "fcntl.cma"
