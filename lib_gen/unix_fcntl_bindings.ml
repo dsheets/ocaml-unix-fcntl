@@ -17,11 +17,6 @@
 
 open Ctypes
 
-(* blech Obj.magic! *)
-let fd_of_int (x: int) : Unix.file_descr = Obj.magic x
-let int_of_fd (x: Unix.file_descr) : int = Obj.magic x
-let fd = view ~read:fd_of_int ~write:int_of_fd int
-
 module C(F: Cstubs.FOREIGN) = struct
 
   (* OS X doesn't have these *)
@@ -51,7 +46,8 @@ module C(F: Cstubs.FOREIGN) = struct
   (* Linux, OS X, and FreeBSD don't have these *)
   let o_search   = F.foreign "unix_fcntl_o_search"   (void @-> returning int)
 
-  let open_perms = F.foreign "open" (string_opt @-> int @-> int @-> returning fd)
-  let open_      = F.foreign "open" (string_opt @-> int @-> returning fd)
+  let open_perms =
+    F.foreign "open" (string_opt @-> int @-> int @-> returning int)
+  let open_      = F.foreign "open" (string_opt @-> int @-> returning int)
 
 end

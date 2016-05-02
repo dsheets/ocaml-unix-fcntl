@@ -1,1 +1,2 @@
 <fcntl_map.*>: package(ctypes.stubs), package(unix-errno.unix), use_fcntl_stubs
+<fcntl_map.*>: package(unix-type-representations)

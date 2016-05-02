@@ -119,7 +119,11 @@ let host = {
 let open_ path ?perms oflags =
   let oflags = Fcntl.(Oflags.to_code_exn ~host:host.Host.oflags oflags) in
   Errno_unix.raise_on_errno ~call:"open" ~label:path (fun () ->
-    match perms with
-    | None       -> C.open_ (Some path) oflags
-    | Some perms -> C.open_perms (Some path) oflags perms
+    let fd = match perms with
+      | None       -> C.open_ (Some path) oflags
+      | Some perms -> C.open_perms (Some path) oflags perms
+    in
+    if fd < 0
+    then None
+    else Some (Unix_representations.file_descr_of_int fd)
   )
