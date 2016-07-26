@@ -1,4 +1,4 @@
 <*.{ml,mli}>: package(lwt.preemptive), thread, package(unix-errno)
-<*.{ml,mli}>: package(unix-type-representations)
+<*.{ml,mli}>: package(unix-type-representations), package(ctypes)
 <unix_fcntl_lwt_stubs.c>: use_lwt
 <*.{cma,cmxa}>: use_fcntl_lwt_stubs

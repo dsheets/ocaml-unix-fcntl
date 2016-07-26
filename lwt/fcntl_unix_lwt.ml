@@ -33,5 +33,5 @@ let open_
     Lwt_unix.run_job (make_open_job ~name ~flags ~perms)
     >>= fun (fd, errno) ->
     if Unix_representations.int_of_file_descr fd < 0
-    then raise_errno_error ~call:"open" ~label:name errno
+    then raise_errno_error ~call:"open" ~label:name (Signed.SInt.of_int errno)
     else Lwt.return fd
