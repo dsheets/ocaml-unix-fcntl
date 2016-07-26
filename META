@@ -8,7 +8,7 @@ archive(native, plugin) = "fcntl.cmxs"
 exists_if = "fcntl.cma"
 
 package "unix" (
-  requires = "unix ctypes.stubs unix-fcntl unix-errno.unix"
+  requires = "unix ctypes.stubs unix-fcntl unix-errno.unix unix-type-representations ctypes"
   archive(byte) = "unix_fcntl.cma"
   archive(bytes, plugin) = "unix_fcntl.cma"
   archive(native) = "unix_fcntl.cmxa"
