@@ -1,3 +1,6 @@
+0.3.4 (2016-08-03):
+* Updates for unix-errno 0.5.0: errno is now a sint, not an int.
+
 0.3.3 (2016-06-01):
 * Add support for ctypes 0.6.0
 
