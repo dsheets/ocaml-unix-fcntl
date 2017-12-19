@@ -69,6 +69,7 @@ module Oflags = struct
     | Unix.O_SYNC     -> O_SYNC
     | Unix.O_RSYNC    -> O_RSYNC
     | Unix.O_CLOEXEC  -> O_CLOEXEC
+    | Unix.O_KEEPEXEC
     | Unix.O_SHARE_DELETE -> raise Not_found
   )
 
