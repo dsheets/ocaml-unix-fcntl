@@ -69,7 +69,8 @@ module Oflags = struct
     | Unix.O_SYNC     -> O_SYNC
     | Unix.O_RSYNC    -> O_RSYNC
     | Unix.O_CLOEXEC  -> O_CLOEXEC
-    | Unix.O_SHARE_DELETE -> raise Not_found
+    | Unix.O_SHARE_DELETE
+    | Unix.O_KEEPEXEC -> raise Not_found
   )
 
   let of_unix t =
